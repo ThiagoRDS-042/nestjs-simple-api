@@ -1,5 +1,6 @@
 import { BaseEntity } from '@shared/utils/base-entity';
 import { Replace } from '@shared/utils/replace';
+
 import { Phone } from './phone';
 
 interface AuthorProps {
