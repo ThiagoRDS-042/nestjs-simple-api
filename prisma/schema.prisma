@@ -9,3 +9,33 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Author {
+  id        String    @id
+  name      String
+  email     String    @unique
+  password  String
+  phone     String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  posts     Post[]
+
+  @@map("authors")
+}
+
+model Post {
+  id        String    @id
+  title     String    @unique
+  content   String
+  category  String
+  authorId  String
+  author    Author    @relation(fields: [authorId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  published DateTime
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([authorId])
+  @@map("pots")
+}

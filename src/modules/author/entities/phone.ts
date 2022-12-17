@@ -1,3 +1,5 @@
+import { InvalidPhoneFormat } from './errors/invalid-phone-format';
+
 export class Phone {
   private readonly phone: string;
 
@@ -5,7 +7,7 @@ export class Phone {
     const isPhoneFormatValid = this.validatePhoneFormat(phone);
 
     if (!isPhoneFormatValid) {
-      throw new Error('Invalid phone format');
+      throw new InvalidPhoneFormat();
     }
 
     this.phone = phone;
@@ -15,7 +17,13 @@ export class Phone {
     return /\(\d{2}\)\s\d{1}\.\d{4}-\d{4}/.test(phone);
   }
 
-  get value(): string {
+  public get value(): string {
     return this.phone;
+  }
+
+  public static newPhone(phone: string): Phone {
+    const instancePhone = new Phone(phone);
+
+    return instancePhone;
   }
 }
