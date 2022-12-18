@@ -1,12 +1,12 @@
 import { hash } from 'bcryptjs';
 
+import { AppError } from '@shared/errors/app-error';
+
 import { Injectable } from '@nestjs/common';
 
 import { Author } from '../entities/author.entity';
 import { Phone } from '../entities/phone';
 import { AuthorsRepository } from '../repositories/authors-repository';
-import { AuthorNotFound } from './errors/author-not-found';
-import { EmailAlreadyUsed } from './errors/email-already-used';
 
 interface IRequest {
   authorId: string;
@@ -26,13 +26,13 @@ export class UpdateAuthorAccount {
     const authorExist = await this.authorsRepository.findById(authorId);
 
     if (!authorExist) {
-      throw new AuthorNotFound();
+      throw new AppError('Author does not exists', 'AUTHOR_NOT_FOUND', 404);
     }
 
     const authorEmailExist = await this.authorsRepository.findByEmail(email);
 
     if (authorEmailExist && authorEmailExist.id !== authorExist.id) {
-      throw new EmailAlreadyUsed();
+      throw new AppError('Email already used', 'EMAIL_ALREADY_USED', 409);
     }
 
     const passwordEncrypted = await hash(password, 10);

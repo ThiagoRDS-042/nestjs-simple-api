@@ -1,5 +1,5 @@
 import { Author } from '@modules/author/entities/author.entity';
-import { AuthorsRepository } from '@modules/author/infra/repositories/authors-repository';
+import { AuthorsRepository } from '@modules/author/repositories/authors-repository';
 
 export class InMemoryAuthorsRepository implements AuthorsRepository {
   public authors: Author[] = [];

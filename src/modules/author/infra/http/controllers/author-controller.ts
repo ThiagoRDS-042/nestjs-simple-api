@@ -1,3 +1,5 @@
+import { Response } from 'express';
+
 import { CreateAuthorAccount } from '@modules/author/use-cases/create-author-account';
 import { DeleteAuthorAccount } from '@modules/author/use-cases/delete-author-account';
 import { GetAuthorAccount } from '@modules/author/use-cases/get-author-account';
@@ -11,14 +13,12 @@ import {
   Param,
   Post,
   Put,
+  Res,
 } from '@nestjs/common';
 
 import { CreateAuthorAccountBody } from '../dtos/create-author-account-body';
 import { UpdateAuthorAccountBody } from '../dtos/update-author-account-body';
-import {
-  AuthorViewModel,
-  AuthorViewModelResponse,
-} from '../view-models/author-view-model';
+import { AuthorViewModel } from '../view-models/author-view-model';
 
 @Controller('/authors')
 export class AuthorController {
@@ -31,9 +31,7 @@ export class AuthorController {
   ) {}
 
   @Post('/')
-  public async create(
-    @Body() body: CreateAuthorAccountBody,
-  ): Promise<{ author: AuthorViewModelResponse }> {
+  async create(@Body() body: CreateAuthorAccountBody, @Res() res: Response) {
     const { email, name, password, phone } = body;
 
     const author = await this.createAuthorAccount.execute({
@@ -43,14 +41,15 @@ export class AuthorController {
       phone,
     });
 
-    return { author: AuthorViewModel.toHTTP(author) };
+    return res.status(200).json({ author: AuthorViewModel.toHTTP(author) });
   }
 
   @Put('/:authorId')
   async save(
     @Param('authorId') authorId: string,
     @Body() body: UpdateAuthorAccountBody,
-  ): Promise<{ author: AuthorViewModelResponse }> {
+    @Res() res: Response,
+  ) {
     const { email, name, password, phone } = body;
 
     const author = await this.updateAuthorAccount.execute({
@@ -61,29 +60,30 @@ export class AuthorController {
       authorId,
     });
 
-    return { author: AuthorViewModel.toHTTP(author) };
+    return res.status(200).json({ author: AuthorViewModel.toHTTP(author) });
   }
 
   @Get('/:authorId')
-  async get(
-    @Param('authorId') authorId: string,
-  ): Promise<{ author: AuthorViewModelResponse }> {
+  async get(@Param('authorId') authorId: string, @Res() res: Response) {
     const author = await this.getAuthorAccount.execute({
       authorId,
     });
 
-    return { author: AuthorViewModel.toHTTP(author) };
+    return res.status(200).json({ author: AuthorViewModel.toHTTP(author) });
   }
 
   @Get('/')
-  async list(): Promise<{ authors: AuthorViewModelResponse[] }> {
+  async list(@Res() res: Response) {
     const authors = await this.listAuthorsAccount.execute();
 
-    return { authors: authors.map(AuthorViewModel.toHTTP) };
+    return res
+      .status(200)
+      .json({ authors: authors.map(AuthorViewModel.toHTTP) });
   }
 
   @Delete('/:authorId')
-  async delete(@Param('authorId') authorId: string): Promise<void> {
+  async delete(@Param('authorId') authorId: string, @Res() res: Response) {
     await this.deleteAuthorAccount.execute({ authorId });
+    return res.status(204).json();
   }
 }

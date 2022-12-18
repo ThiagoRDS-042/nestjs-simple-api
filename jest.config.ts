@@ -15,6 +15,7 @@ const config: Config = {
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
+  maxWorkers: 1,
 };
 
 export default config;

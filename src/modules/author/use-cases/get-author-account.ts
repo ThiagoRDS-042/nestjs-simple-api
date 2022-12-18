@@ -1,8 +1,9 @@
+import { AppError } from '@shared/errors/app-error';
+
 import { Injectable } from '@nestjs/common';
 
 import { Author } from '../entities/author.entity';
 import { AuthorsRepository } from '../repositories/authors-repository';
-import { AuthorNotFound } from './errors/author-not-found';
 
 interface IRequest {
   authorId: string;
@@ -18,7 +19,7 @@ export class GetAuthorAccount {
     const author = await this.authorsRepository.findById(authorId);
 
     if (!author) {
-      throw new AuthorNotFound();
+      throw new AppError('Author does not exists', 'AUTHOR_NOT_FOUND', 404);
     }
 
     return author;

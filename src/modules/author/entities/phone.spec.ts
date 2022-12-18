@@ -1,3 +1,5 @@
+import { AppError } from '@shared/errors/app-error';
+
 import { Phone } from './phone';
 
 describe('Phone', () => {
@@ -8,6 +10,6 @@ describe('Phone', () => {
   });
 
   it('should not be able to create a new phone with invalid format', () => {
-    expect(() => Phone.newPhone('invalid-format')).toThrow();
+    expect(() => Phone.newPhone('invalid-format')).toThrow(AppError);
   });
 });

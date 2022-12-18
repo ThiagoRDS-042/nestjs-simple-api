@@ -1,9 +1,19 @@
 import { Response } from 'express';
 
-import { InvalidPhoneFormat } from '@modules/author/entities/errors/invalid-phone-format';
-import { AuthorNotFound } from '@modules/author/use-cases/errors/author-not-found';
-import { EmailAlreadyUsed } from '@modules/author/use-cases/errors/email-already-used';
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  BadRequestException,
+  Catch,
+  ExceptionFilter,
+} from '@nestjs/common';
+
+import { AppError } from './app-error';
+
+interface IErrorResponse {
+  message: string[];
+  statusCode: number;
+  error: string;
+}
 
 @Catch(Error)
 export class HttpException implements ExceptionFilter {
@@ -11,24 +21,24 @@ export class HttpException implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    let message: string;
+    let message: string[];
     let statusCode: number;
     let code: string;
 
-    if (exception instanceof AuthorNotFound) {
-      message = exception.message;
-      code = exception.code;
-      statusCode = 404;
-    } else if (exception instanceof EmailAlreadyUsed) {
-      message = exception.message;
-      code = exception.code;
-      statusCode = 409;
-    } else if (exception instanceof InvalidPhoneFormat) {
-      message = exception.message;
-      code = exception.code;
-      statusCode = 400;
+    if (exception instanceof AppError) {
+      const response = exception.getResponse();
+
+      message = [response.message];
+      code = response.error;
+      statusCode = response.statusCode;
+    } else if (exception instanceof BadRequestException) {
+      const response = exception.getResponse() as IErrorResponse;
+
+      message = response.message;
+      code = response.error;
+      statusCode = response.statusCode;
     } else {
-      message = 'Internal server error';
+      message = ['Internal server error'];
       code = 'INTERNAL_SERVER_ERROR';
       statusCode = 500;
 

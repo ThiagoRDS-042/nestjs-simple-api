@@ -1,6 +1,6 @@
 import { Author } from '@modules/author/entities/author.entity';
 
-export interface AuthorViewModelResponse {
+interface AuthorViewModelResponse {
   id: string;
   name: string;
   email: string;

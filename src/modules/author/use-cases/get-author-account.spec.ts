@@ -1,7 +1,8 @@
+import { AppError } from '@shared/errors/app-error';
+
 import { makeAuthor } from '@test/factories/authors-factory';
 import { InMemoryAuthorsRepository } from '@test/repositories/in-memory-authors-repository';
 
-import { AuthorNotFound } from './errors/author-not-found';
 import { GetAuthorAccount } from './get-author-account';
 
 describe('Get author account', () => {
@@ -31,6 +32,6 @@ describe('Get author account', () => {
       getAuthorAccount.execute({
         authorId: 'non-existing-author-id',
       }),
-    ).rejects.toThrow(AuthorNotFound);
+    ).rejects.toThrow(AppError);
   });
 });

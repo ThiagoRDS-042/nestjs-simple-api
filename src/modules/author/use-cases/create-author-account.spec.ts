@@ -1,7 +1,8 @@
+import { AppError } from '@shared/errors/app-error';
+
 import { InMemoryAuthorsRepository } from '@test/repositories/in-memory-authors-repository';
 
 import { CreateAuthorAccount } from './create-author-account';
-import { EmailAlreadyUsed } from './errors/email-already-used';
 
 describe('Create author account', () => {
   let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
@@ -40,6 +41,6 @@ describe('Create author account', () => {
         name: 'john doe',
         phone: '(12) 2.3699-9563',
       }),
-    ).rejects.toThrow(EmailAlreadyUsed);
+    ).rejects.toThrow(AppError);
   });
 });

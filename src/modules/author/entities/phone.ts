@@ -1,4 +1,4 @@
-import { InvalidPhoneFormat } from './errors/invalid-phone-format';
+import { AppError } from '@shared/errors/app-error';
 
 export class Phone {
   private readonly phone: string;
@@ -7,7 +7,7 @@ export class Phone {
     const isPhoneFormatValid = this.validatePhoneFormat(phone);
 
     if (!isPhoneFormatValid) {
-      throw new InvalidPhoneFormat();
+      throw new AppError('Invalid phone format', 'INVALID_PHONE_FORMAT', 400);
     }
 
     this.phone = phone;

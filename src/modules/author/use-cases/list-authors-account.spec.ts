@@ -1,15 +1,15 @@
 import { makeAuthor } from '@test/factories/authors-factory';
 import { InMemoryAuthorsRepository } from '@test/repositories/in-memory-authors-repository';
 
-import { LisAuthorsAccount } from './list-authors-account';
+import { ListAuthorsAccount } from './list-authors-account';
 
 describe('List author account', () => {
   let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
-  let listAuthorAccount: LisAuthorsAccount;
+  let listAuthorAccount: ListAuthorsAccount;
 
   beforeAll((done) => {
     inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
-    listAuthorAccount = new LisAuthorsAccount(inMemoryAuthorsRepository);
+    listAuthorAccount = new ListAuthorsAccount(inMemoryAuthorsRepository);
     done();
   });
 

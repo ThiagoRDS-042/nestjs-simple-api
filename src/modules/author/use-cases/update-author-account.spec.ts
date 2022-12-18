@@ -1,8 +1,8 @@
+import { AppError } from '@shared/errors/app-error';
+
 import { makeAuthor } from '@test/factories/authors-factory';
 import { InMemoryAuthorsRepository } from '@test/repositories/in-memory-authors-repository';
 
-import { AuthorNotFound } from './errors/author-not-found';
-import { EmailAlreadyUsed } from './errors/email-already-used';
 import { UpdateAuthorAccount } from './update-author-account';
 
 describe('Update author account', () => {
@@ -54,7 +54,7 @@ describe('Update author account', () => {
         password: 'password',
         phone: '(11) 1.1111-1111',
       }),
-    ).rejects.toThrow(EmailAlreadyUsed);
+    ).rejects.toThrow(AppError);
   });
 
   it('should not be able to update a non exiting author id', async () => {
@@ -66,6 +66,6 @@ describe('Update author account', () => {
         password: 'password',
         phone: '(11) 1.1111-1111',
       }),
-    ).rejects.toThrow(AuthorNotFound);
+    ).rejects.toThrow(AppError);
   });
 });

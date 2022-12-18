@@ -13,28 +13,28 @@ CREATE TABLE "authors" (
 );
 
 -- CreateTable
-CREATE TABLE "pots" (
+CREATE TABLE "posts" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "authorId" TEXT NOT NULL,
-    "published" TIMESTAMP(3) NOT NULL,
+    "publishedAt" TIMESTAMP(3) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "deleted_at" TIMESTAMP(3),
 
-    CONSTRAINT "pots_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "posts_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "authors_email_key" ON "authors"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "pots_title_key" ON "pots"("title");
+CREATE UNIQUE INDEX "posts_title_key" ON "posts"("title");
 
 -- CreateIndex
-CREATE INDEX "pots_authorId_idx" ON "pots"("authorId");
+CREATE INDEX "posts_authorId_idx" ON "posts"("authorId");
 
 -- AddForeignKey
-ALTER TABLE "pots" ADD CONSTRAINT "pots_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "authors"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "posts" ADD CONSTRAINT "posts_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "authors"("id") ON DELETE CASCADE ON UPDATE CASCADE;
