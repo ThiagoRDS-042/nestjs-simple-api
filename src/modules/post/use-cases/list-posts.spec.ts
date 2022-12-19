@@ -31,7 +31,7 @@ describe('List posts', () => {
     await inMemoryPostsRepository.create(post_2);
 
     const posts = await listPosts.execute({
-      authorIdEq: author.id,
+      authorIdEquals: author.id,
     });
 
     expect(posts).toHaveLength(2);

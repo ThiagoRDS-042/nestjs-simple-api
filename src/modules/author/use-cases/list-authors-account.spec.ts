@@ -28,7 +28,10 @@ describe('List author account', () => {
       }),
     );
 
-    const authors = await listAuthorAccount.execute();
+    const authors = await listAuthorAccount.execute({
+      emailContains: '@example.com',
+      nameContains: 'author',
+    });
 
     expect(authors).toHaveLength(2);
   });
