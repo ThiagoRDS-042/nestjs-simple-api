@@ -13,10 +13,12 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
 } from '@nestjs/common';
 
 import { CreateAuthorAccountBody } from '../dtos/create-author-account-body';
+import { ListAuthorsAccountQuery } from '../dtos/list-authors-account-query';
 import { UpdateAuthorAccountBody } from '../dtos/update-author-account-body';
 import { AuthorViewModel } from '../view-models/author-view-model';
 
@@ -73,8 +75,13 @@ export class AuthorController {
   }
 
   @Get('/')
-  async list(@Res() res: Response) {
-    const authors = await this.listAuthorsAccount.execute();
+  async list(@Query() query: ListAuthorsAccountQuery, @Res() res: Response) {
+    const { emailContains, nameContains } = query;
+
+    const authors = await this.listAuthorsAccount.execute({
+      emailContains,
+      nameContains,
+    });
 
     return res
       .status(200)

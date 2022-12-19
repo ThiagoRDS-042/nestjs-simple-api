@@ -7,7 +7,7 @@ describe('List author account', () => {
   let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
   let listAuthorAccount: ListAuthorsAccount;
 
-  beforeAll((done) => {
+  beforeEach((done) => {
     inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
     listAuthorAccount = new ListAuthorsAccount(inMemoryAuthorsRepository);
     done();

@@ -75,11 +75,11 @@ export class PostController {
 
   @Get('/')
   async list(@Query() query: ListPostsQuery, @Res() res: Response) {
-    const { authorIdEq, categoryEq, titleContains } = query;
+    const { authorIdEquals, categoryEquals, titleContains } = query;
 
     const posts = await this.listPosts.execute({
-      authorIdEq,
-      categoryEq,
+      authorIdEquals,
+      categoryEquals,
       titleContains,
     });
 

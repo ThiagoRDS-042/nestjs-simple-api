@@ -12,7 +12,7 @@ const config: Config = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
-  collectCoverageFrom: ['**/*.(t|j)s'],
+  collectCoverageFrom: ['./src/**/use-cases/*.ts', './src/**/entities/*.ts'],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
   maxWorkers: 1,

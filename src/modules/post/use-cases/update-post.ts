@@ -28,7 +28,7 @@ export class UpdatePost {
 
     const titleALreadyUsed = await this.postsRepository.findByTitle(title);
 
-    if (titleALreadyUsed && titleALreadyUsed.id !== titleALreadyUsed.id) {
+    if (titleALreadyUsed && titleALreadyUsed.id !== postExists.id) {
       throw new AppError('Title already used', 'TITLE_ALREADY_USED', 409);
     }
 

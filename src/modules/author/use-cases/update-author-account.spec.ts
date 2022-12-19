@@ -9,7 +9,7 @@ describe('Update author account', () => {
   let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
   let updateAuthorAccount: UpdateAuthorAccount;
 
-  beforeAll((done) => {
+  beforeEach((done) => {
     inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
     updateAuthorAccount = new UpdateAuthorAccount(inMemoryAuthorsRepository);
     done();
@@ -57,7 +57,7 @@ describe('Update author account', () => {
     ).rejects.toThrow(AppError);
   });
 
-  it('should not be able to update a non exiting author id', async () => {
+  it('should not be able to update a non exiting author', async () => {
     await expect(() =>
       updateAuthorAccount.execute({
         authorId: 'non-existing-author-id',
