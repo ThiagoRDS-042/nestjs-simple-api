@@ -1,10 +1,11 @@
-import { PostModule } from '@modules/author/author.module';
-import { AuthorModule } from '@modules/post/author.module';
+import { HTTPModule } from '@shared/infra/http/http.module';
+
 import { Module } from '@nestjs/common';
+
 import { AppController } from './app.controller';
 
 @Module({
-  imports: [AuthorModule, PostModule],
+  imports: [HTTPModule],
   controllers: [AppController],
 })
 export class AppModule {}

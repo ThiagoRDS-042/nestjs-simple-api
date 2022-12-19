@@ -1,8 +1,9 @@
 import { BaseEntity } from '@shared/utils/base-entity';
 import { Replace } from '@shared/utils/replace';
+
 import { Phone } from './phone';
 
-interface AuthorProps {
+export interface AuthorProps {
   name: string;
   email: string;
   password: string;
@@ -75,7 +76,7 @@ export class Author extends BaseEntity<AuthorProps> {
     return this.props.deletedAt;
   }
 
-  public newAuthor(props: AuthorProps, id?: string) {
+  public static newAuthor(props: AuthorProps, id?: string): Author {
     const author = new Author(props, id);
 
     return author;
