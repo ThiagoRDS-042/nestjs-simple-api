@@ -2,11 +2,11 @@ import { IsOptional } from 'class-validator';
 
 export class ListPostsQuery {
   @IsOptional()
-  categoryEq?: string;
+  categoryEquals: string;
 
   @IsOptional()
-  titleContains?: string;
+  titleContains: string;
 
   @IsOptional()
-  authorIdEq?: string;
+  authorIdEquals: string;
 }

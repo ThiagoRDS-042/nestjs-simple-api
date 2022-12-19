@@ -2,7 +2,7 @@ import { PrismaService } from '@shared/infra/database/prisma/prisma.service';
 
 import { Post } from '@modules/post/entities/post.entity';
 import {
-  IFindManyRequest,
+  IFindManyPostsRequest,
   PostsRepository,
 } from '@modules/post/repositories/posts-repository';
 import { Injectable } from '@nestjs/common';
@@ -61,21 +61,23 @@ export class PrismaPostsRepository implements PostsRepository {
     return PrismaPostMapper.toDomain(post);
   }
 
-  async findMany(options: IFindManyRequest): Promise<Post[]> {
-    const { authorIdEq, categoryEq, titleContains } = options;
+  async findMany(options: IFindManyPostsRequest): Promise<Post[]> {
+    const { authorIdEquals, categoryEquals, titleContains } = options;
 
     const posts = await this.prisma.post.findMany({
       where: {
         authorId: {
-          equals: authorIdEq,
+          equals: authorIdEquals,
         },
         category: {
-          equals: categoryEq,
+          equals: categoryEquals,
         },
         title: {
           contains: titleContains,
         },
-        deletedAt: null,
+        deletedAt: {
+          equals: null,
+        },
       },
     });
 

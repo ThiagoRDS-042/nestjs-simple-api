@@ -8,7 +8,7 @@ describe('Create author account', () => {
   let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
   let createAuthorAccount: CreateAuthorAccount;
 
-  beforeAll((done) => {
+  beforeEach((done) => {
     inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
     createAuthorAccount = new CreateAuthorAccount(inMemoryAuthorsRepository);
     done();

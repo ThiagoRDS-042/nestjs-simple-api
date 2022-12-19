@@ -30,7 +30,7 @@ export class CreateAuthorAccount {
 
     const passwordEncrypted = await hash(password, 10);
 
-    const author = new Author({
+    const author = Author.newAuthor({
       email,
       name,
       password: passwordEncrypted,

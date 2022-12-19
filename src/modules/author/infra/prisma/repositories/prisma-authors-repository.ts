@@ -1,7 +1,10 @@
 import { PrismaService } from '@shared/infra/database/prisma/prisma.service';
 
 import { Author } from '@modules/author/entities/author.entity';
-import { AuthorsRepository } from '@modules/author/repositories/authors-repository';
+import {
+  AuthorsRepository,
+  IFindManyAuthorsRequest,
+} from '@modules/author/repositories/authors-repository';
 import { Injectable } from '@nestjs/common';
 
 import { PrismaAuthorMapper } from '../mappers/prisma-author-mapper';
@@ -58,10 +61,20 @@ export class PrismaAuthorsRepository implements AuthorsRepository {
     return PrismaAuthorMapper.toDomain(author);
   }
 
-  async findMany(): Promise<Author[]> {
+  async findMany(options: IFindManyAuthorsRequest): Promise<Author[]> {
+    const { emailContains, nameContains } = options;
+
     const authors = await this.prisma.author.findMany({
       where: {
-        deletedAt: null,
+        email: {
+          contains: emailContains,
+        },
+        name: {
+          contains: nameContains,
+        },
+        deletedAt: {
+          equals: null,
+        },
       },
     });
 

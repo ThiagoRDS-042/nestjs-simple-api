@@ -29,7 +29,9 @@ export class DeleteAuthorAccount {
 
     await this.authorsRepository.save(author);
 
-    const posts = await this.postsRepository.findMany({ authorIdEq: authorId });
+    const posts = await this.postsRepository.findMany({
+      authorIdEquals: authorId,
+    });
 
     await Promise.all(
       posts.map((post) => {

@@ -7,7 +7,7 @@ describe('List author account', () => {
   let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
   let listAuthorAccount: ListAuthorsAccount;
 
-  beforeAll((done) => {
+  beforeEach((done) => {
     inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
     listAuthorAccount = new ListAuthorsAccount(inMemoryAuthorsRepository);
     done();
@@ -28,7 +28,10 @@ describe('List author account', () => {
       }),
     );
 
-    const authors = await listAuthorAccount.execute();
+    const authors = await listAuthorAccount.execute({
+      emailContains: '@example.com',
+      nameContains: 'author',
+    });
 
     expect(authors).toHaveLength(2);
   });
