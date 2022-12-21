@@ -11,6 +11,8 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpException());
   app.useGlobalPipes(new ValidationPipe());
 
+  app.enableCors({ origin: '*' });
+
   await app.listen(3333);
 }
 bootstrap();

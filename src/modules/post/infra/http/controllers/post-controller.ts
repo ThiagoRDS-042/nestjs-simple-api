@@ -33,7 +33,7 @@ export class PostController {
   ) {}
 
   @Post('/')
-  async publish(@Body() body: PublishNewPostBody, @Res() res: Response) {
+  async publish(@Body() body: PublishNewPostBody, @Res() response: Response) {
     const { authorId, category, content, title } = body;
 
     const post = await this.publishNewPost.execute({
@@ -43,14 +43,14 @@ export class PostController {
       title,
     });
 
-    return res.status(201).json({ post: PostViewModel.toHTTP(post) });
+    return response.status(201).json({ post: PostViewModel.toHTTP(post) });
   }
 
   @Put('/:postId')
   async save(
     @Param('postId') postId: string,
     @Body() body: UpdatePostBody,
-    @Res() res: Response,
+    @Res() response: Response,
   ) {
     const { category, content, title } = body;
 
@@ -61,20 +61,20 @@ export class PostController {
       title,
     });
 
-    return res.status(200).json({ post: PostViewModel.toHTTP(post) });
+    return response.status(200).json({ post: PostViewModel.toHTTP(post) });
   }
 
   @Get('/:postId')
-  async get(@Param('postId') postId: string, @Res() res: Response) {
+  async get(@Param('postId') postId: string, @Res() response: Response) {
     const post = await this.getPost.execute({
       postId,
     });
 
-    return res.status(200).json({ post: PostViewModel.toHTTP(post) });
+    return response.status(200).json({ post: PostViewModel.toHTTP(post) });
   }
 
   @Get('/')
-  async list(@Query() query: ListPostsQuery, @Res() res: Response) {
+  async list(@Query() query: ListPostsQuery, @Res() response: Response) {
     const { authorIdEquals, categoryEquals, titleContains } = query;
 
     const posts = await this.listPosts.execute({
@@ -83,13 +83,15 @@ export class PostController {
       titleContains,
     });
 
-    return res.status(200).json({ posts: posts.map(PostViewModel.toHTTP) });
+    return response
+      .status(200)
+      .json({ posts: posts.map(PostViewModel.toHTTP) });
   }
 
   @Delete('/:postId')
-  async delete(@Param('postId') postId: string, @Res() res: Response) {
+  async delete(@Param('postId') postId: string, @Res() response: Response) {
     await this.deletePost.execute({ postId });
 
-    return res.status(204).json();
+    return response.status(204).json();
   }
 }

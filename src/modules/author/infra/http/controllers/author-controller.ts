@@ -1,5 +1,10 @@
 import { Response } from 'express';
 
+import {
+  CurrentAuth,
+  ICurrentAuthResponse,
+} from '@modules/auth/infra/decorators/current-auth';
+import { JwtAuthGuard } from '@modules/auth/infra/guards/jwt-guard';
 import { CreateAuthorAccount } from '@modules/author/use-cases/create-author-account';
 import { DeleteAuthorAccount } from '@modules/author/use-cases/delete-author-account';
 import { GetAuthorAccount } from '@modules/author/use-cases/get-author-account';
@@ -15,6 +20,7 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 
 import { CreateAuthorAccountBody } from '../dtos/create-author-account-body';
@@ -33,7 +39,10 @@ export class AuthorController {
   ) {}
 
   @Post('/')
-  async create(@Body() body: CreateAuthorAccountBody, @Res() res: Response) {
+  async create(
+    @Body() body: CreateAuthorAccountBody,
+    @Res() response: Response,
+  ) {
     const { email, name, password, phone } = body;
 
     const author = await this.createAuthorAccount.execute({
@@ -43,14 +52,17 @@ export class AuthorController {
       phone,
     });
 
-    return res.status(200).json({ author: AuthorViewModel.toHTTP(author) });
+    return response
+      .status(200)
+      .json({ author: AuthorViewModel.toHTTP(author) });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:authorId')
   async save(
     @Param('authorId') authorId: string,
     @Body() body: UpdateAuthorAccountBody,
-    @Res() res: Response,
+    @Res() response: Response,
   ) {
     const { email, name, password, phone } = body;
 
@@ -62,20 +74,46 @@ export class AuthorController {
       authorId,
     });
 
-    return res.status(200).json({ author: AuthorViewModel.toHTTP(author) });
+    return response
+      .status(200)
+      .json({ author: AuthorViewModel.toHTTP(author) });
   }
 
-  @Get('/:authorId')
-  async get(@Param('authorId') authorId: string, @Res() res: Response) {
+  @UseGuards(JwtAuthGuard)
+  @Get('/profile')
+  async profile(
+    @CurrentAuth() currentAuth: ICurrentAuthResponse,
+    @Res() response: Response,
+  ) {
+    const { authorId } = currentAuth;
+
     const author = await this.getAuthorAccount.execute({
       authorId,
     });
 
-    return res.status(200).json({ author: AuthorViewModel.toHTTP(author) });
+    return response
+      .status(200)
+      .json({ author: AuthorViewModel.toHTTP(author) });
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/:authorId')
+  async get(@Param('authorId') authorId: string, @Res() response: Response) {
+    const author = await this.getAuthorAccount.execute({
+      authorId,
+    });
+
+    return response
+      .status(200)
+      .json({ author: AuthorViewModel.toHTTP(author) });
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/')
-  async list(@Query() query: ListAuthorsAccountQuery, @Res() res: Response) {
+  async list(
+    @Query() query: ListAuthorsAccountQuery,
+    @Res() response: Response,
+  ) {
     const { emailContains, nameContains } = query;
 
     const authors = await this.listAuthorsAccount.execute({
@@ -83,14 +121,15 @@ export class AuthorController {
       nameContains,
     });
 
-    return res
+    return response
       .status(200)
       .json({ authors: authors.map(AuthorViewModel.toHTTP) });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:authorId')
-  async delete(@Param('authorId') authorId: string, @Res() res: Response) {
+  async delete(@Param('authorId') authorId: string, @Res() response: Response) {
     await this.deleteAuthorAccount.execute({ authorId });
-    return res.status(204).json();
+    return response.status(204).json();
   }
 }
