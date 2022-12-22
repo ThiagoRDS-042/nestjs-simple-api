@@ -20,6 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "typecheck": "tsc --project tsconfig.json",
     "migrate:dev": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
     "migrate": "prisma migrate deploy",
     "prepare": "husky install"
   },
@@ -49,9 +50,11 @@
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
+    "@mermaid-js/mermaid-cli": "^9.2.2",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.2.1",
+    "@prisma/generator-helper": "^4.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.8",
@@ -71,6 +74,7 @@
     "lint-staged": "^13.1.0",
     "prettier": "^2.3.2",
     "prisma": "^4.7.1",
+    "prisma-erd-generator": "^1.2.4",
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
     "ts-jest": "28.0.8",
