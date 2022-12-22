@@ -3,7 +3,7 @@ import { Replace } from '@shared/utils/replace';
 
 import { Content } from './content';
 
-interface PostProps {
+export interface PostProps {
   title: string;
   content: Content;
   category: string;

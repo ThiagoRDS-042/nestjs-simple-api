@@ -2,9 +2,9 @@ import { Response } from 'express';
 
 import {
   ArgumentsHost,
-  BadRequestException,
   Catch,
   ExceptionFilter,
+  HttpException as HttpExceptions,
 } from '@nestjs/common';
 
 import { AppError } from './app-error';
@@ -31,7 +31,7 @@ export class HttpException implements ExceptionFilter {
       message = [response.message];
       code = response.error;
       statusCode = response.statusCode;
-    } else if (exception instanceof BadRequestException) {
+    } else if (exception instanceof HttpExceptions) {
       const response = exception.getResponse() as IErrorResponse;
 
       message = response.message;
@@ -46,6 +46,7 @@ export class HttpException implements ExceptionFilter {
       console.error({
         message,
         code,
+        exception,
       });
     }
 

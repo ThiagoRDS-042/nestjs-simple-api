@@ -9,7 +9,7 @@ describe('Get author account', () => {
   let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
   let getAuthorAccount: GetAuthorAccount;
 
-  beforeAll((done) => {
+  beforeEach((done) => {
     inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
     getAuthorAccount = new GetAuthorAccount(inMemoryAuthorsRepository);
     done();
@@ -27,7 +27,7 @@ describe('Get author account', () => {
     expect(foundAuthor).toEqual(author);
   });
 
-  it('should not be able to get a non existing author id', async () => {
+  it('should not be able to get a non existing author', async () => {
     await expect(() =>
       getAuthorAccount.execute({
         authorId: 'non-existing-author-id',

@@ -1,5 +1,8 @@
 import { Author } from '@modules/author/entities/author.entity';
-import { AuthorsRepository } from '@modules/author/repositories/authors-repository';
+import {
+  AuthorsRepository,
+  IFindManyAuthorsRequest,
+} from '@modules/author/repositories/authors-repository';
 
 export class InMemoryAuthorsRepository implements AuthorsRepository {
   public authors: Author[] = [];
@@ -28,7 +31,23 @@ export class InMemoryAuthorsRepository implements AuthorsRepository {
     return author;
   }
 
-  async findMany(): Promise<Author[]> {
-    return this.authors;
+  async findMany(options: IFindManyAuthorsRequest): Promise<Author[]> {
+    const { emailContains, nameContains } = options;
+
+    let authors = this.authors;
+
+    if (emailContains) {
+      authors = authors.filter((item) =>
+        item.email.toUpperCase().includes(emailContains.toUpperCase()),
+      );
+    }
+
+    if (nameContains) {
+      authors = authors.filter((item) =>
+        item.name.toUpperCase().includes(nameContains.toUpperCase()),
+      );
+    }
+
+    return authors;
   }
 }

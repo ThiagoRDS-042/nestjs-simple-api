@@ -4,9 +4,9 @@ import { Post } from '../entities/post.entity';
 import { PostsRepository } from '../repositories/posts-repository';
 
 interface IRequest {
-  categoryEq?: string;
+  categoryEquals?: string;
   titleContains?: string;
-  authorIdEq?: string;
+  authorIdEquals?: string;
 }
 
 @Injectable()
@@ -14,11 +14,11 @@ export class ListPosts {
   constructor(private postsRepository: PostsRepository) {}
 
   async execute(data: IRequest): Promise<Post[]> {
-    const { authorIdEq, categoryEq, titleContains } = data;
+    const { authorIdEquals, categoryEquals, titleContains } = data;
 
     const posts = await this.postsRepository.findMany({
-      categoryEq,
-      authorIdEq,
+      authorIdEquals,
+      categoryEquals,
       titleContains,
     });
 
