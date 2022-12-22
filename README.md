@@ -35,8 +35,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - Rodando os testes:
 
   - **jest**
-    - Abra o terminal e digite `yarn test` para iniciar os testes unitários ou `yarn test:e2e` para iniciar os testes de integração. 
-    - Obs: Os testes de integração so funcionam se hover um banco de dados ativo no momento da execução.
+    - Abra o terminal e digite `yarn test` para iniciar os testes unitários.
 
 - Documentação da aplicação:
 
