@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { randomUUID } from 'node:crypto';
 
 import {
   CurrentAuth,
@@ -22,12 +23,25 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
+import { AuthorResponse, AuthorsResponse } from '../dtos/author-response';
 import { CreateAuthorAccountBody } from '../dtos/create-author-account-body';
 import { ListAuthorsAccountQuery } from '../dtos/list-authors-account-query';
 import { UpdateAuthorAccountBody } from '../dtos/update-author-account-body';
 import { AuthorViewModel } from '../view-models/author-view-model';
 
+@ApiTags('Authors')
 @Controller('/authors')
 export class AuthorController {
   constructor(
@@ -38,6 +52,19 @@ export class AuthorController {
     private deleteAuthorAccount: DeleteAuthorAccount,
   ) {}
 
+  @ApiCreatedResponse({
+    description: 'The author account has been successfully create.',
+    type: AuthorResponse,
+  })
+  @ApiConflictResponse({
+    description: 'The author e-mail has already been used',
+    schema: {
+      example: {
+        message: ['Email already used'],
+        code: 'EMAIL_ALREADY_USED',
+      },
+    },
+  })
   @Post('/')
   async create(
     @Body() body: CreateAuthorAccountBody,
@@ -57,6 +84,43 @@ export class AuthorController {
       .json({ author: AuthorViewModel.toHTTP(author) });
   }
 
+  @ApiOkResponse({
+    description: 'The author account has been successfully update.',
+    type: AuthorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'The author has not found',
+    schema: {
+      example: {
+        message: ['Author does not exists'],
+        code: 'AUTHOR_NOT_FOUND',
+      },
+    },
+  })
+  @ApiConflictResponse({
+    description: 'The author e-mail has already been used',
+    schema: {
+      example: {
+        message: ['Email already used'],
+        code: 'EMAIL_ALREADY_USED',
+      },
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'The author not informed of the token',
+    schema: {
+      example: {
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiParam({
+    name: 'authorId',
+    type: String,
+    format: 'uuid',
+    example: randomUUID(),
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Put('/:authorId')
   async save(
@@ -79,6 +143,28 @@ export class AuthorController {
       .json({ author: AuthorViewModel.toHTTP(author) });
   }
 
+  @ApiOkResponse({
+    description: 'The author profile has been successfully found.',
+    type: AuthorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'The author has not found',
+    schema: {
+      example: {
+        message: ['Author does not exists'],
+        code: 'AUTHOR_NOT_FOUND',
+      },
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'The author not informed of the token',
+    schema: {
+      example: {
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
   async profile(
@@ -96,6 +182,34 @@ export class AuthorController {
       .json({ author: AuthorViewModel.toHTTP(author) });
   }
 
+  @ApiOkResponse({
+    description: 'The author account has been successfully found.',
+    type: AuthorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'The author has not found',
+    schema: {
+      example: {
+        message: ['Author does not exists'],
+        code: 'AUTHOR_NOT_FOUND',
+      },
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'The author not informed of the token',
+    schema: {
+      example: {
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiParam({
+    name: 'authorId',
+    type: String,
+    format: 'uuid',
+    example: randomUUID(),
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('/:authorId')
   async get(@Param('authorId') authorId: string, @Res() response: Response) {
@@ -108,6 +222,19 @@ export class AuthorController {
       .json({ author: AuthorViewModel.toHTTP(author) });
   }
 
+  @ApiOkResponse({
+    description: 'The authors account has been successfully list.',
+    type: AuthorsResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'The author not informed of the token',
+    schema: {
+      example: {
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('/')
   async list(
@@ -126,6 +253,33 @@ export class AuthorController {
       .json({ authors: authors.map(AuthorViewModel.toHTTP) });
   }
 
+  @ApiNoContentResponse({
+    description: 'The authors account has been successfully delete.',
+  })
+  @ApiNotFoundResponse({
+    description: 'The author has not found',
+    schema: {
+      example: {
+        message: ['Author does not exists'],
+        code: 'AUTHOR_NOT_FOUND',
+      },
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'The author not informed of the token',
+    schema: {
+      example: {
+        message: 'Unauthorized',
+      },
+    },
+  })
+  @ApiParam({
+    name: 'authorId',
+    type: String,
+    format: 'uuid',
+    example: randomUUID(),
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete('/:authorId')
   async delete(@Param('authorId') authorId: string, @Res() response: Response) {

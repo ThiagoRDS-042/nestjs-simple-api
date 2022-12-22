@@ -1,14 +1,9 @@
 import { Author } from '@modules/author/entities/author.entity';
 
-interface AuthorViewModelResponse {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-}
+import { Author as AuthorResponse } from '../dtos/author-response';
 
 export class AuthorViewModel {
-  static toHTTP(author: Author): AuthorViewModelResponse {
+  static toHTTP(author: Author): AuthorResponse {
     return {
       id: author.id,
       name: author.name,

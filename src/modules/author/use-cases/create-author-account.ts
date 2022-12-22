@@ -25,7 +25,7 @@ export class CreateAuthorAccount {
     const authorALreadyExists = await this.authorsRepository.findByEmail(email);
 
     if (authorALreadyExists) {
-      throw new AppError('Email already used', 'EMAIL_ALREADY_USED', 423);
+      throw new AppError('Email already used', 'EMAIL_ALREADY_USED', 409);
     }
 
     const passwordEncrypted = await hash(password, 10);

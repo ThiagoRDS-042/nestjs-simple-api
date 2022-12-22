@@ -16,12 +16,15 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { ListPostsQuery } from '../dtos/list-posts-query';
 import { PublishNewPostBody } from '../dtos/publish-new-post-body';
 import { UpdatePostBody } from '../dtos/update-post-body';
 import { PostViewModel } from '../view-models/post-view-model';
 
+@ApiTags('Posts')
+@ApiBearerAuth()
 @Controller('/posts')
 export class PostController {
   constructor(

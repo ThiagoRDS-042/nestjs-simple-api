@@ -46,6 +46,7 @@ export class HttpException implements ExceptionFilter {
       console.error({
         message,
         code,
+        exception,
       });
     }
 
