@@ -53,7 +53,7 @@ export class AuthorController {
   ) {}
 
   @ApiCreatedResponse({
-    description: 'The author account has been successfully create.',
+    description: 'The author account has been successfully created.',
     type: AuthorResponse,
   })
   @ApiConflictResponse({
@@ -85,7 +85,7 @@ export class AuthorController {
   }
 
   @ApiOkResponse({
-    description: 'The author account has been successfully update.',
+    description: 'The author account has been successfully updated.',
     type: AuthorResponse,
   })
   @ApiNotFoundResponse({
@@ -144,7 +144,7 @@ export class AuthorController {
   }
 
   @ApiOkResponse({
-    description: 'The author profile has been successfully found.',
+    description: 'The author profile has been successfully founded.',
     type: AuthorResponse,
   })
   @ApiNotFoundResponse({
@@ -183,7 +183,7 @@ export class AuthorController {
   }
 
   @ApiOkResponse({
-    description: 'The author account has been successfully found.',
+    description: 'The author account has been successfully founded.',
     type: AuthorResponse,
   })
   @ApiNotFoundResponse({
@@ -223,7 +223,7 @@ export class AuthorController {
   }
 
   @ApiOkResponse({
-    description: 'The authors account has been successfully list.',
+    description: 'The authors account has been successfully listed.',
     type: AuthorsResponse,
   })
   @ApiUnauthorizedResponse({
@@ -254,7 +254,7 @@ export class AuthorController {
   }
 
   @ApiNoContentResponse({
-    description: 'The authors account has been successfully delete.',
+    description: 'The authors account has been successfully deleted.',
   })
   @ApiNotFoundResponse({
     description: 'The author has not found',

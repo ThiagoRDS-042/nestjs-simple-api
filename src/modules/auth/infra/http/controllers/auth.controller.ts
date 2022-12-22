@@ -14,7 +14,7 @@ export class AuthController {
   constructor(private authenticateAuthorAccount: AuthenticateAuthorAccount) {}
 
   @ApiOkResponse({
-    description: 'The author account has been successfully authenticate.',
+    description: 'The author account has been successfully authenticated.',
     type: AuthResponse,
   })
   @ApiBadRequestResponse({

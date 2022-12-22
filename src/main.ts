@@ -7,7 +7,9 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './docs/swagger/swagger-config';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
+  const port = process.env.SERVER_POST || 3333;
+
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalFilters(new HttpException());
@@ -19,7 +21,7 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3333, async () =>
+  await app.listen(port, async () =>
     // eslint-disable-next-line no-console
     console.log(`server listening on ${await app.getUrl()}`),
   );
