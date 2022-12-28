@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { randomUUID } from 'node:crypto';
 
+import { JwtBearerGuard } from '@modules/auth/infra/guards/jwt-bearer-guard';
 import { DeletePost } from '@modules/post/use-cases/delete-post';
 import { GetPost } from '@modules/post/use-cases/get-post';
 import { ListPosts } from '@modules/post/use-cases/list-posts';
@@ -16,12 +17,15 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -35,6 +39,7 @@ import { PostViewModel } from '../view-models/post-view-model';
 
 @ApiTags('Posts')
 @ApiBearerAuth()
+@UseGuards(JwtBearerGuard)
 @Controller('/posts')
 export class PostController {
   constructor(
@@ -51,27 +56,56 @@ export class PostController {
   })
   @ApiConflictResponse({
     description: 'The post title has already been used',
-    schema: {
-      example: {
-        message: ['Title already used'],
-        code: 'TITLE_ALREADY_USED',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Title already used'],
+          code: 'TITLE_ALREADY_USED',
+        },
       },
     },
   })
   @ApiNotFoundResponse({
     description: 'The post author has not been found',
-    schema: {
-      example: {
-        message: ['Author does not exist'],
-        code: 'AUTHOR_NOT_FOUND',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Author does not exist'],
+          code: 'AUTHOR_NOT_FOUND',
+        },
       },
     },
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
@@ -89,33 +123,62 @@ export class PostController {
     return response.status(201).json({ post: PostViewModel.toHTTP(post) });
   }
 
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The post has been successfully updated.',
     type: PostResponse,
   })
   @ApiConflictResponse({
     description: 'The post title has already been used',
-    schema: {
-      example: {
-        message: ['Title already used'],
-        code: 'TITLE_ALREADY_USED',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Title already used'],
+          code: 'TITLE_ALREADY_USED',
+        },
       },
     },
   })
   @ApiNotFoundResponse({
     description: 'The post has not been found',
-    schema: {
-      example: {
-        message: ['Post does not exist'],
-        code: 'POST_NOT_FOUND',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Post does not exist'],
+          code: 'POST_NOT_FOUND',
+        },
       },
     },
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
@@ -143,24 +206,51 @@ export class PostController {
     return response.status(200).json({ post: PostViewModel.toHTTP(post) });
   }
 
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The post has been successfully founded.',
     type: PostResponse,
   })
   @ApiNotFoundResponse({
     description: 'The post has not been found',
-    schema: {
-      example: {
-        message: ['Post does not exist'],
-        code: 'POST_NOT_FOUND',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Post does not exist'],
+          code: 'POST_NOT_FOUND',
+        },
       },
     },
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
@@ -179,15 +269,40 @@ export class PostController {
     return response.status(200).json({ post: PostViewModel.toHTTP(post) });
   }
 
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The post has been successfully listed.',
     type: PostsResponse,
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
@@ -206,24 +321,50 @@ export class PostController {
       .json({ posts: posts.map(PostViewModel.toHTTP) });
   }
 
-  @ApiCreatedResponse({
+  @ApiNoContentResponse({
     description: 'The post has been successfully deleted.',
-    type: PostResponse,
   })
   @ApiNotFoundResponse({
     description: 'The post has not been found',
-    schema: {
-      example: {
-        message: ['Post does not exist'],
-        code: 'POST_NOT_FOUND',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Post does not exist'],
+          code: 'POST_NOT_FOUND',
+        },
       },
     },
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })

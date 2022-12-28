@@ -15,11 +15,14 @@ async function bootstrap(): Promise<void> {
   app.useGlobalFilters(new HttpException());
   app.useGlobalPipes(new ValidationPipe());
 
-  app.enableCors({ origin: '*' });
+  app.enableCors({
+    origin: ['*'],
+    credentials: true,
+  });
 
   const document = SwaggerModule.createDocument(app, SwaggerConfig);
 
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(port, async () =>
     // eslint-disable-next-line no-console

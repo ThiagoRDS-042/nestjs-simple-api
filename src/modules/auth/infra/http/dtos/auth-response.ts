@@ -9,10 +9,10 @@ export class AuthResponse {
   author: Author;
 
   @ApiProperty({
-    description: 'access_token',
+    description: 'accessToken',
     type: String,
     example:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
   })
-  access_token: string;
+  accessToken: string;
 }

@@ -5,7 +5,8 @@ import {
   CurrentAuth,
   ICurrentAuthResponse,
 } from '@modules/auth/infra/decorators/current-auth';
-import { JwtAuthGuard } from '@modules/auth/infra/guards/jwt-guard';
+import { JwtBearerGuard } from '@modules/auth/infra/guards/jwt-bearer-guard';
+import { JwtCookieGuard } from '@modules/auth/infra/guards/jwt-cookie-guard';
 import { CreateAuthorAccount } from '@modules/author/use-cases/create-author-account';
 import { DeleteAuthorAccount } from '@modules/author/use-cases/delete-author-account';
 import { GetAuthorAccount } from '@modules/author/use-cases/get-author-account';
@@ -25,6 +26,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiCookieAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -58,10 +60,12 @@ export class AuthorController {
   })
   @ApiConflictResponse({
     description: 'The author e-mail has already been used',
-    schema: {
-      example: {
-        message: ['Email already used'],
-        code: 'EMAIL_ALREADY_USED',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Email already used'],
+          code: 'EMAIL_ALREADY_USED',
+        },
       },
     },
   })
@@ -90,27 +94,56 @@ export class AuthorController {
   })
   @ApiNotFoundResponse({
     description: 'The author has not found',
-    schema: {
-      example: {
-        message: ['Author does not exists'],
-        code: 'AUTHOR_NOT_FOUND',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Author does not exists'],
+          code: 'AUTHOR_NOT_FOUND',
+        },
       },
     },
   })
   @ApiConflictResponse({
     description: 'The author e-mail has already been used',
-    schema: {
-      example: {
-        message: ['Email already used'],
-        code: 'EMAIL_ALREADY_USED',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Email already used'],
+          code: 'EMAIL_ALREADY_USED',
+        },
       },
     },
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
@@ -121,7 +154,7 @@ export class AuthorController {
     example: randomUUID(),
   })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtBearerGuard)
   @Put('/:authorId')
   async save(
     @Param('authorId') authorId: string,
@@ -149,23 +182,56 @@ export class AuthorController {
   })
   @ApiNotFoundResponse({
     description: 'The author has not found',
-    schema: {
-      example: {
-        message: ['Author does not exists'],
-        code: 'AUTHOR_NOT_FOUND',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Author does not exists'],
+          code: 'AUTHOR_NOT_FOUND',
+        },
       },
     },
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          COOKIE_NOT_FOUND: {
+            value: {
+              message: ['Cookie must be not found'],
+              code: 'COOKIE_NOT_FOUND',
+            },
+          },
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @ApiCookieAuth()
+  @UseGuards(JwtCookieGuard)
   @Get('/profile')
   async profile(
     @CurrentAuth() currentAuth: ICurrentAuthResponse,
@@ -188,18 +254,45 @@ export class AuthorController {
   })
   @ApiNotFoundResponse({
     description: 'The author has not found',
-    schema: {
-      example: {
-        message: ['Author does not exists'],
-        code: 'AUTHOR_NOT_FOUND',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Author does not exists'],
+          code: 'AUTHOR_NOT_FOUND',
+        },
       },
     },
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
@@ -210,7 +303,7 @@ export class AuthorController {
     example: randomUUID(),
   })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtBearerGuard)
   @Get('/:authorId')
   async get(@Param('authorId') authorId: string, @Res() response: Response) {
     const author = await this.getAuthorAccount.execute({
@@ -227,15 +320,40 @@ export class AuthorController {
     type: AuthorsResponse,
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtBearerGuard)
   @Get('/')
   async list(
     @Query() query: ListAuthorsAccountQuery,
@@ -258,18 +376,45 @@ export class AuthorController {
   })
   @ApiNotFoundResponse({
     description: 'The author has not found',
-    schema: {
-      example: {
-        message: ['Author does not exists'],
-        code: 'AUTHOR_NOT_FOUND',
+    content: {
+      'application/json': {
+        example: {
+          message: ['Author does not exists'],
+          code: 'AUTHOR_NOT_FOUND',
+        },
       },
     },
   })
   @ApiUnauthorizedResponse({
-    description: 'The author not informed of the token',
-    schema: {
-      example: {
-        message: 'Unauthorized',
+    description: 'The problems of the token',
+    content: {
+      'application/json': {
+        examples: {
+          TOKEN_NOT_FOUND: {
+            value: {
+              message: ['Token must be not found'],
+              code: 'TOKEN_NOT_FOUND',
+            },
+          },
+          EXPIRED_TOKEN: {
+            value: {
+              message: ['Expired token'],
+              code: 'EXPIRED_TOKEN',
+            },
+          },
+          INVALID_TOKEN: {
+            value: {
+              message: ['Invalid token'],
+              code: 'INVALID_TOKEN',
+            },
+          },
+          UNAUTHORIZED: {
+            value: {
+              message: ['Unauthorized'],
+              code: 'UNAUTHORIZED',
+            },
+          },
+        },
       },
     },
   })
@@ -280,7 +425,7 @@ export class AuthorController {
     example: randomUUID(),
   })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtBearerGuard)
   @Delete('/:authorId')
   async delete(@Param('authorId') authorId: string, @Res() response: Response) {
     await this.deleteAuthorAccount.execute({ authorId });

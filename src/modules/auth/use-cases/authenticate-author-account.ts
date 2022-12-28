@@ -1,11 +1,12 @@
 import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 
 import { AppError } from '@shared/errors/app-error';
 
+import { jwtConfig } from '@configs/jwt-config';
 import { Author } from '@modules/author/entities/author.entity';
 import { AuthorsRepository } from '@modules/author/repositories/authors-repository';
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
 interface IRequest {
   email: string;
@@ -14,15 +15,12 @@ interface IRequest {
 
 interface IResponse {
   author: Author;
-  access_token: string;
+  accessToken: string;
 }
 
 @Injectable()
 export class AuthenticateAuthorAccount {
-  constructor(
-    private authorsRepository: AuthorsRepository,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private authorsRepository: AuthorsRepository) {}
 
   async execute(data: IRequest): Promise<IResponse> {
     const { email, password } = data;
@@ -47,11 +45,18 @@ export class AuthenticateAuthorAccount {
       );
     }
 
+    const { algorithm, expiresIn, secretKey } = jwtConfig;
+
     const payload = { name: author.name, sub: author.id };
+
+    const accessToken = sign(payload, secretKey, {
+      algorithm,
+      expiresIn,
+    });
 
     return {
       author,
-      access_token: this.jwtService.sign(payload),
+      accessToken,
     };
   }
 }

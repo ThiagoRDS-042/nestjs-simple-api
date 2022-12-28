@@ -11,4 +11,6 @@ export const SwaggerConfig = new DocumentBuilder()
   .addTag('Auth', 'Authenticate authors')
   .addTag('Authors', 'Create, update, get, list and delete authors')
   .addTag('Posts', 'Create, update, get, list and delete posts')
+  .addBearerAuth()
+  .addCookieAuth('accessToken')
   .build();
