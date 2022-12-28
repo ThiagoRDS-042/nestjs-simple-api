@@ -1,8 +1,6 @@
 import { AppError } from '@shared/errors/app-error';
 
-interface IResponse {
-  [key: string]: string;
-}
+type IResponse = Record<string, string>;
 
 export const cookieParser = (cookiesHeader: string): IResponse => {
   try {
