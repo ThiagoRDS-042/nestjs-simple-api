@@ -82,7 +82,7 @@ export class AuthController {
     });
 
     return response
-      .status(204)
+      .status(200)
       .json({ author: AuthorViewModel.toHTTP(author) });
   }
 
