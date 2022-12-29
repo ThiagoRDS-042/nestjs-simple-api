@@ -1,6 +1,6 @@
 import { Response } from 'express';
 
-import { cookieConfig } from '@configs/cookie-config';
+import { CookieConfig } from '@configs/cookie-config';
 import { AuthenticateAuthorAccount } from '@modules/auth/use-cases/authenticate-author-account';
 import { AuthorResponse } from '@modules/author/infra/http/dtos/author-response';
 import { AuthorViewModel } from '@modules/author/infra/http/view-models/author-view-model';
@@ -71,7 +71,7 @@ export class AuthController {
         password,
       });
 
-    const { key } = cookieConfig;
+    const { key } = CookieConfig.newCookieConfig();
 
     response.cookie(key, accessToken, {
       httpOnly: true,
@@ -91,7 +91,7 @@ export class AuthController {
   })
   @Post('/logout/cookie')
   async logoutCookie(@Res() response: Response) {
-    const { key } = cookieConfig;
+    const { key } = CookieConfig.newCookieConfig();
 
     response.clearCookie(key);
 

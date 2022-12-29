@@ -2,7 +2,7 @@ import { hash } from 'bcryptjs';
 
 import { AppError } from '@shared/errors/app-error';
 
-import { jwtConfig } from '@configs/jwt-config';
+import { JwtConfig } from '@configs/jwt-config';
 import { makeAuthor } from '@test/factories/authors-factory';
 import { InMemoryAuthorsRepository } from '@test/repositories/in-memory-authors-repository';
 
@@ -20,6 +20,7 @@ describe('Authenticate author account', () => {
       inMemoryAuthorsRepository,
     );
 
+    const jwtConfig = JwtConfig.newJwtConfig();
     jwtConfig.secretKey = 'secretKeyTest';
   });
 

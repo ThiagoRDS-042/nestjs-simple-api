@@ -5,7 +5,7 @@ import { AppError } from '@shared/errors/app-error';
 import { cookieParser } from '@shared/utils/cokkie-parser';
 import { validateToken } from '@shared/utils/validate-token';
 
-import { cookieConfig } from '@configs/cookie-config';
+import { CookieConfig } from '@configs/cookie-config';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class JwtCookieGuard implements CanActivate {
       throw new AppError('Cookie must be not found', 'COOKIE_NOT_FOUND', 401);
     }
 
-    const { key } = cookieConfig;
+    const { key } = CookieConfig.newCookieConfig();
 
     const { [key]: accessToken } = cookieParser(cookie);
 

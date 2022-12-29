@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { randomUUID } from 'node:crypto';
 
+import { CacheConfig } from '@configs/cache-config';
 import {
   CurrentAuth,
   ICurrentAuthResponse,
@@ -243,6 +244,10 @@ export class AuthorController {
       authorId,
     });
 
+    const { name, value } = CacheConfig.newCacheConfig();
+
+    response.setHeader(name, value);
+
     return response
       .status(200)
       .json({ author: AuthorViewModel.toHTTP(author) });
@@ -310,6 +315,15 @@ export class AuthorController {
       authorId,
     });
 
+    const cacheConfig = CacheConfig.newCacheConfig();
+
+    cacheConfig.setValue({
+      seconds: 60 * 2,
+      type: 'private',
+    });
+
+    response.setHeader(cacheConfig.name, cacheConfig.value);
+
     return response
       .status(200)
       .json({ author: AuthorViewModel.toHTTP(author) });
@@ -365,6 +379,10 @@ export class AuthorController {
       emailContains,
       nameContains,
     });
+
+    const { name, value } = CacheConfig.newCacheConfig();
+
+    response.setHeader(name, value);
 
     return response
       .status(200)

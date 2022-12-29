@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { randomUUID } from 'node:crypto';
 
+import { CacheConfig } from '@configs/cache-config';
 import { JwtBearerGuard } from '@modules/auth/infra/guards/jwt-bearer-guard';
 import { DeletePost } from '@modules/post/use-cases/delete-post';
 import { GetPost } from '@modules/post/use-cases/get-post';
@@ -266,6 +267,10 @@ export class PostController {
       postId,
     });
 
+    const { name, value } = CacheConfig.newCacheConfig();
+
+    response.setHeader(name, value);
+
     return response.status(200).json({ post: PostViewModel.toHTTP(post) });
   }
 
@@ -315,6 +320,10 @@ export class PostController {
       categoryEquals,
       titleContains,
     });
+
+    const { name, value } = CacheConfig.newCacheConfig();
+
+    response.setHeader(name, value);
 
     return response
       .status(200)

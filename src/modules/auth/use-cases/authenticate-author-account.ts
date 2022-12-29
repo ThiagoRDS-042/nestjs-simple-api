@@ -3,7 +3,7 @@ import { sign } from 'jsonwebtoken';
 
 import { AppError } from '@shared/errors/app-error';
 
-import { jwtConfig } from '@configs/jwt-config';
+import { JwtConfig } from '@configs/jwt-config';
 import { Author } from '@modules/author/entities/author.entity';
 import { AuthorsRepository } from '@modules/author/repositories/authors-repository';
 import { Injectable } from '@nestjs/common';
@@ -45,7 +45,7 @@ export class AuthenticateAuthorAccount {
       );
     }
 
-    const { algorithm, expiresIn, secretKey } = jwtConfig;
+    const { algorithm, expiresIn, secretKey } = JwtConfig.newJwtConfig();
 
     const payload = { name: author.name, sub: author.id };
 

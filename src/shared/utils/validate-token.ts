@@ -2,7 +2,7 @@ import { verify, TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 
 import { AppError } from '@shared/errors/app-error';
 
-import { jwtConfig } from '@configs/jwt-config';
+import { JwtConfig } from '@configs/jwt-config';
 
 interface IPayload {
   name: string;
@@ -18,7 +18,7 @@ interface IResponse {
 
 export const validateToken = (token: string): IResponse => {
   try {
-    const { secretKey, algorithm } = jwtConfig;
+    const { secretKey, algorithm } = JwtConfig.newJwtConfig();
 
     const { name, sub } = verify(token, secretKey, {
       algorithms: [algorithm],
