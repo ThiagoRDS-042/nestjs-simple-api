@@ -1,9 +1,20 @@
 import { Content } from '@modules/post/entities/content';
 import { Post } from '@modules/post/entities/post.entity';
-import { Post as RawPost } from '@prisma/client';
+
+interface IRawPost {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  authorId: string;
+  publishedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+}
 
 export class PrismaPostMapper {
-  public static toPrisma(post: Post): RawPost {
+  public static toPrisma(post: Post): IRawPost {
     return {
       id: post.id,
       authorId: post.authorId,
@@ -17,7 +28,7 @@ export class PrismaPostMapper {
     };
   }
 
-  public static toDomain(raw: RawPost): Post {
+  public static toDomain(raw: IRawPost): Post {
     return Post.newPost(
       {
         authorId: raw.authorId,

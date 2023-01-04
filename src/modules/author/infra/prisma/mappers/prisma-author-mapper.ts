@@ -1,9 +1,19 @@
 import { Author } from '@modules/author/entities/author.entity';
 import { Phone } from '@modules/author/entities/phone';
-import { Author as RawAuthor } from '@prisma/client';
+
+interface IRawAuthor {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+}
 
 export class PrismaAuthorMapper {
-  public static toPrisma(author: Author): RawAuthor {
+  public static toPrisma(author: Author): IRawAuthor {
     return {
       id: author.id,
       email: author.email,
@@ -16,7 +26,7 @@ export class PrismaAuthorMapper {
     };
   }
 
-  public static toDomain(raw: RawAuthor): Author {
+  public static toDomain(raw: IRawAuthor): Author {
     return Author.newAuthor(
       {
         email: raw.email,
