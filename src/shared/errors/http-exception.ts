@@ -16,7 +16,7 @@ interface IErrorResponse {
 }
 
 @Catch(Error)
-export class HttpException implements ExceptionFilter {
+export class HttpException implements ExceptionFilter<Error> {
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
