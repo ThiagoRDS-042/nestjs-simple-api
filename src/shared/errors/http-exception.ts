@@ -6,6 +6,7 @@ import {
   ExceptionFilter,
   HttpException as HttpExceptions,
 } from '@nestjs/common';
+import { ThrottlerException } from '@nestjs/throttler';
 
 import { AppError } from './app-error';
 
@@ -31,6 +32,10 @@ export class HttpException implements ExceptionFilter<Error> {
       message = [response.message];
       code = response.error;
       statusCode = response.statusCode;
+    } else if (exception instanceof ThrottlerException) {
+      message = ['Too many requests'];
+      code = 'TOO_MANY_REQUESTS';
+      statusCode = 429;
     } else if (exception instanceof HttpExceptions) {
       const response = exception.getResponse() as IErrorResponse;
 
